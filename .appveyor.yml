@@ -4,7 +4,7 @@ stack: jdk 11  # версия JDK
 
 branches:
   only:
-  - main  # ветка git
+    - main  # ветка git
 
 build: off  # будем использовать свой скрипт сборки
 
@@ -14,5 +14,4 @@ install:
   - java -jar ./artifacts/app-card-delivery.jar &
 
 build_script:
-  - ./gradlew test -Dselenide.headless=true
-  - ./gradlew test --info
+  - ./gradlew test --info -Dselenide.headless=true
