@@ -23,9 +23,7 @@ public class CardDeliveryTestWithForm {
     }
 
     @Test
-    void shouldOrderTheCardDeliveryEverythingOk() throws ParseException {
-        Configuration.holdBrowserOpen = true;
-
+    void shouldOrderTheCardDeliveryEverythingOk() {
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
         $(By.className("input__icon")).click();
         String day = $(By.className("calendar__day_state_today")).getText();
