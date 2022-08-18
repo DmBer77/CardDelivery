@@ -7,15 +7,18 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Objects;
 
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.Selenide.$;
+import static java.time.LocalDate.parse;
 
 public class CardDeliveryTestWithForm {
 
@@ -28,6 +31,19 @@ public class CardDeliveryTestWithForm {
             if (monthArrayInRus[i].equals(month)) monthInEn = monthArrayInEn[i];
         }
         return Month.valueOf(monthInEn.toUpperCase()).getValue();
+    }
+
+    static SimpleDateFormat[] formats = new SimpleDateFormat[] {
+            new SimpleDateFormat("dd.MM.yyyy"),
+    };
+
+    static Date parse(String date, DateTimeFormatter dateTimeFormatter) {
+        for (SimpleDateFormat format : formats) {
+            try {
+                return format.parse(date);
+            } catch (ParseException ignored) {}
+        }
+        return null;
     }
 
     @BeforeEach
@@ -46,11 +62,19 @@ public class CardDeliveryTestWithForm {
         int yearToInt = Integer.parseInt(words[1]);
         int monthToInt = getMonthNumber(words[0]);
         int dayToInt = Integer.parseInt(day);
-        String dayToDelivery = String.valueOf((dayToInt) + 7);
+        String dayToDelivery = String.valueOf((dayToInt) + 14);
         String dateToDelivery = dayToDelivery + "." + "0" + monthToInt + "." + yearToInt;
-        $("[data-test-id='date'] input").setValue(dateToDelivery);
+        String date = Objects.requireNonNull(parse(dateToDelivery, DateTimeFormatter.ofPattern("dd,MM.yyyy"))).toString();
 
-        String dayToInfo = LocalDate.now().plusDays(7).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        System.out.println("---------------");
+        System.out.println(date);
+        System.out.println("---------------");
+
+        $("[data-test-id='date'] input").setValue(date);
+
+
+
+        String dayToInfo = LocalDate.now().plusDays(14).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 
         $("[data-test-id='city'] input").setValue("ка");
         $x("//*[contains(text(),'Калининград')]").click();
