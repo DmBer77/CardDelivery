@@ -221,6 +221,7 @@ class CardDeliveryTest {
         $("[data-test-id='phone'].input_invalid")
                 .shouldBe(visible, Duration.ofSeconds(15)).shouldHave(text("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
     }
+
     @Test
     void shouldOrderTheCardDeliverySectionFourThePhoneNumberContainsFewerCharactersThanNecessary() {
         String dayToDelivery = date(4);
