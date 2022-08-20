@@ -23,12 +23,28 @@ public class CardDeliveryTestWithForm {
     }
 
     @Test
-    void shouldOrderTheCardDeliveryEverythingOk() {
+    void shouldOrderTheCardDeliveryEverythingOkDeliveryThroughSevenDays() {
+        $("[data-test-id='city'] input").setValue("ка");
+        $x("//*[contains(text(),'Казань')]").click();
+        $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
+        $(By.className("input__icon")).click();
+        String dateToDelivery = LocalDate.now().plusDays(7).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        $("[data-test-id='date'] input").setValue(dateToDelivery);
+        $("[data-test-id='name'] input").setValue("Иванов Петр");
+        $("[data-test-id='phone'] input").setValue("+79012345678");
+        $("[data-test-id='agreement']").click();
+        $x("//*[contains(text(),'Забронировать')]").click();
+        $("[data-test-id='notification'] .notification__content")
+                .shouldBe(visible, Duration.ofSeconds(15)).shouldHave(exactText("Встреча успешно забронирована на " + dateToDelivery));
+    }
+
+    @Test
+    void shouldOrderTheCardDeliveryEverythingOkDeliveryThroughFourteenDays() {
         $("[data-test-id='city'] input").setValue("ка");
         $x("//*[contains(text(),'Калининград')]").click();
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
         $(By.className("input__icon")).click();
-        String dateToDelivery = LocalDate.now().plusDays(7).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String dateToDelivery = LocalDate.now().plusDays(14).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         $("[data-test-id='date'] input").setValue(dateToDelivery);
         $("[data-test-id='name'] input").setValue("Иванов Петр");
         $("[data-test-id='phone'] input").setValue("+79012345678");
