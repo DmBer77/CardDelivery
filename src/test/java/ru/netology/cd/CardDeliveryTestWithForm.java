@@ -11,8 +11,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 
 public class CardDeliveryTestWithForm {
@@ -24,35 +23,39 @@ public class CardDeliveryTestWithForm {
 
     @Test
     void shouldOrderTheCardDeliveryEverythingOkDeliveryThroughSevenDays() {
+        Configuration.holdBrowserOpen = true;
         $("[data-test-id='city'] input").setValue("ка");
         $x("//*[contains(text(),'Казань')]").click();
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
         $(By.className("input__icon")).click();
-        String dateToDelivery = LocalDate.now().plusDays(7).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        $("[data-test-id='date'] input").setValue(dateToDelivery);
+        $x("//td[@data-day]//following-sibling::td/following-sibling::td").click();
         $("[data-test-id='name'] input").setValue("Иванов Петр");
         $("[data-test-id='phone'] input").setValue("+79012345678");
         $("[data-test-id='agreement']").click();
         $x("//*[contains(text(),'Забронировать')]").click();
         $("[data-test-id='notification'] .notification__content")
-                .shouldBe(visible, Duration.ofSeconds(15)).shouldHave(exactText("Встреча успешно забронирована на " + dateToDelivery));
+                .shouldBe(visible, Duration.ofSeconds(15)).shouldHave(text("Встреча успешно забронирована на "
+                        + $(".calendar__day_state_current").getText()));
     }
 
     @Test
-    void shouldOrderTheCardDeliveryEverythingOkDeliveryThroughFourteenDays() {
+    void shouldOrderTheCardDeliveryEverythingOkDeliveryToNextMonth() {
+        Configuration.holdBrowserOpen = true;
         $("[data-test-id='city'] input").setValue("ка");
         $x("//*[contains(text(),'Калининград')]").click();
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
         $(By.className("input__icon")).click();
-        String dateToDelivery = LocalDate.now().plusDays(14).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        $("[data-test-id='date'] input").setValue(dateToDelivery);
+        $(By.cssSelector("[data-step=\"1\"]")).click();
+        $("[data-day]").click();
         $("[data-test-id='name'] input").setValue("Иванов Петр");
         $("[data-test-id='phone'] input").setValue("+79012345678");
         $("[data-test-id='agreement']").click();
         $x("//*[contains(text(),'Забронировать')]").click();
         $("[data-test-id='notification'] .notification__content")
-                .shouldBe(visible, Duration.ofSeconds(15)).shouldHave(exactText("Встреча успешно забронирована на " + dateToDelivery));
+                .shouldBe(visible, Duration.ofSeconds(15)).shouldHave(text("Встреча успешно забронирована на "
+                        + $(".calendar__day_state_current").getText()));
     }
+
 }
 
 
