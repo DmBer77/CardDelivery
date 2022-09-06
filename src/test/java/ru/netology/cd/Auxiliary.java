@@ -1,7 +1,5 @@
 package ru.netology.cd;
 
-import org.openqa.selenium.By;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -51,5 +49,19 @@ public class Auxiliary {
 
     String date(int days) {
         return LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
+
+    public int getClickNumber(int yearToCalculate, int month1, int month2) {
+        int monthToCalculate;
+        if (yearToCalculate > 0) {
+            if (month2 > month1) {
+                monthToCalculate = month2 - month1;
+            } else {
+                monthToCalculate = (12 - month1) + month2;
+            }
+        } else {
+            monthToCalculate = month2 - month1;
+        }
+        return monthToCalculate;
     }
 }
