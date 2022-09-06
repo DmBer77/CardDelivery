@@ -1,6 +1,8 @@
 package ru.netology.cd;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.ElementsCollection;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -30,6 +32,7 @@ public class CardDeliveryTestWithForm {
         $("[data-test-id='city'] input").setValue("ка");
         $x("//*[contains(text(),'Калининград')]").click();
         $(By.className("input__icon")).click();
+
         String day = $(By.className("calendar__day_state_current")).getText();
         String monthAndYear = $(By.className("calendar__name")).getText();
 
@@ -45,10 +48,18 @@ public class CardDeliveryTestWithForm {
         String year1 = words1[5];
         String month1 = data.figureAdjustment(data.getMonthNumber(words1[1]));
         String day1 = words1[2];
-        String newDate = day1 + "." + month1 + "." + year1;
+        int day2 = Integer.parseInt(day1);
+
+        int yearToCalculate = Integer.parseInt(year1) - Integer.parseInt(year);
+        int monthToCalculate = data.getClickNumber(yearToCalculate, data.getMonthNumber(words[0]), data.getMonthNumber(words1[1]));
 
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(newDate);
+        for (int i = 0; i < monthToCalculate; i++) {
+            $("[data-step=\"1\"]").click();
+        }
+        final ElementsCollection daysInForm = $$(".calendar__day");
+        daysInForm.findBy(text(String.valueOf(day2))).click();
+
         $("[data-test-id='name'] input").setValue("Иванов Петр");
         $("[data-test-id='phone'] input").setValue("+79012345678");
         $("[data-test-id='agreement']").click();
@@ -58,14 +69,14 @@ public class CardDeliveryTestWithForm {
     }
 
     @Test
-    void shouldOrderTheCardDeliveryThroughFortyFiveDays() throws ParseException {
-        Configuration.holdBrowserOpen = true;
+    void shouldOrderTheCardDeliveryOneHundredAndEightyDays() throws ParseException {
         Auxiliary data = new Auxiliary();
-        int daysForPlanning = 45;
+        int daysForPlanning = 180;
         int daysForCalculation = daysForPlanning - 3;
         $("[data-test-id='city'] input").setValue("ка");
         $x("//*[contains(text(),'Калининград')]").click();
         $(By.className("input__icon")).click();
+
         String day = $(By.className("calendar__day_state_current")).getText();
         String monthAndYear = $(By.className("calendar__name")).getText();
 
@@ -81,10 +92,18 @@ public class CardDeliveryTestWithForm {
         String year1 = words1[5];
         String month1 = data.figureAdjustment(data.getMonthNumber(words1[1]));
         String day1 = words1[2];
-        String newDate = day1 + "." + month1 + "." + year1;
+        int day2 = Integer.parseInt(day1);
+
+        int yearToCalculate = Integer.parseInt(year1) - Integer.parseInt(year);
+        int monthToCalculate = data.getClickNumber(yearToCalculate, data.getMonthNumber(words[0]), data.getMonthNumber(words1[1]));
 
         $("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(newDate);
+        for (int i = 0; i < monthToCalculate; i++) {
+            $("[data-step=\"1\"]").click();
+        }
+        final ElementsCollection daysInForm = $$(".calendar__day");
+        daysInForm.findBy(text(String.valueOf(day2))).click();
+
         $("[data-test-id='name'] input").setValue("Иванов Петр");
         $("[data-test-id='phone'] input").setValue("+79012345678");
         $("[data-test-id='agreement']").click();
